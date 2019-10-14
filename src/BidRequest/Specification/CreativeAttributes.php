@@ -20,20 +20,22 @@ class CreativeAttributes
 {
     use GetConstants;
 
-    const AUDIO_AD_AUTO_PLAY = 1;
-    const AUDIO_AD_USER_INITIATED = 2;
+    const AUDIO_AUTO_PLAY = 1;
+    const AUDIO_USER_INITIATED = 2;
     const EXPANDABLE_AUTOMATIC = 3;
-    const EXPANDABLE_USER_INITIATED_CLICK = 4;
-    const EXPANDABLE_USER_INITIATED_ROLLOVER = 5;
-    const IN_BANNER_VIDEO_AD_AUTO_PLAY = 6;
-    const IN_BANNER_VIDEO_AD_USER_INITIATED = 7;
-    const POP = 8;
-    const PROVOCATIVE_OR_SUGGESTIVE_IMAGERY = 9;
-    const SHAKY_FLASHING_FLICKERING_EXTREME_ANIMATION_SMILEYS = 10;
+    const EXPANDABLE_CLICK_INITIATED = 4;
+    const EXPANDABLE_ROLLOVER_INITIATED = 5;
+    const VIDEO_IN_BANNER_AUTO_PLAY = 6;
+    const VIDEO_IN_BANNER_USER_INITIATED = 7;
+    const POP = 8;  // Pop (e.g., Over, Under, or upon Exit).
+    const PROVOCATIVE_OR_SUGGESTIVE = 9;
+    // Defined as "Shaky, Flashing, Flickering, Extreme Animation, Smileys".
+    const ANNOYING = 10;
     const SURVEYS = 11;
     const TEXT_ONLY = 12;
-    const USER_INTERACTIVE = 13;
+    const USER_INTERACTIVE = 13;  // Eg, embedded games.
     const WINDOWS_DIALOG_OR_ALERT_STYLE = 14;
     const HAS_AUDIO_ON_OFF_BUTTON = 15;
     const AD_CAN_BE_SKIPPED = 16;
+    const FLASH = 17;
 }

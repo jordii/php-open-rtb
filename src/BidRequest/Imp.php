@@ -1,7 +1,7 @@
 <?php
 /**
  * Imp.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 28/08/15 - 14:32
@@ -9,87 +9,160 @@
 
 namespace PowerLinks\OpenRtb\BidRequest;
 
+use PowerLinks\OpenRtb\Tools\Classes\ArrayCollection;
 use PowerLinks\OpenRtb\Tools\Interfaces\Arrayable;
 use PowerLinks\OpenRtb\BidRequest\Specification\BitType;
 use PowerLinks\OpenRtb\Tools\Traits\SetterValidation;
 use PowerLinks\OpenRtb\Tools\Traits\ToArray;
 
+/**
+ * Class Imp
+ * @package PowerLinks\OpenRtb\BidRequest
+ *
+ * This object describes an ad placement or impression being auctioned.
+ * A single bid request can include multiple Imp objects, a use case for which might be an exchange that supports selling all ad positions on a given page.
+ * Each Imp object has a required ID so that bids can reference them individually.
+ *
+ * The presence of Banner, Video, or Native objects subordinate to the Imp object indicates the type of impression being offered.
+ * The publisher can choose one such type which is the typical case or mix them at their discretion.
+ * Any given bid for the impression must conform to one of the offered types.
+ */
 class Imp implements Arrayable
 {
     use SetterValidation;
     use ToArray;
 
     /**
+     * A unique identifier for this impression within the context of the bid request (typically, value starts with 1, and increments up to n for n impressions).
      * @required
      * @var string
      */
     protected $id;
 
     /**
+     * A Banner object; required if this impression is offered as a banner ad opportunity.
      * @var Banner
      */
     protected $banner;
 
     /**
+     * Required if this impression is offered as a video ad opportunity.
      * @var Video
      */
     protected $video;
 
     /**
-     * @var Native
+     * Required if this impression is offered as an audio ad opportunity.
+     *
+     * @var Audio
      */
-    protected $native;
+    protected $audio;
 
     /**
+     * Name of ad mediation partner, SDK technology, or player responsible for rendering ad (typically video or mobile).
+     * Used by some ad servers to customize ad code by partner. Recommended for video and/or apps.
+     * Example strings:
+     *   UNKNOWN_RENDERER
+     *   GOOGLE
+     *   PUBLISHER
+     *
      * @var string
      */
     protected $displaymanager;
 
     /**
+     * Version of ad mediation partner, SDK technology, or player responsible for rendering ad (typically video or mobile).
+     * Used by some ad servers to customize ad code by partner. Recommended for video and/or apps.
+     *
      * @var string
      */
     protected $displaymanagerver;
 
     /**
      * 1 = the ad is interstitial or full screen, 0 = not interstitial
-     * @default 0
      * @var int
      */
     protected $instl;
 
     /**
+     * Identifier for specific ad placement or ad tag that was used to initiate the auction.
+     * This can be useful for debugging of any issues, or for optimization by the buyer.
+     *
      * @var string
      */
     protected $tagid;
 
     /**
+     * Minimum bid for this impression expressed in CPM.
+     *
      * @default 0
      * @var float
      */
     protected $bidfloor;
 
     /**
+     * Currency specified using ISO-4217 alpha codes.
+     * This may be different from bid currency returned by bidder if this is allowed by the exchange.
+     * A single currency, obtained from the included billing_id.
+     *
      * @default USD
      * @var string
      */
     protected $bidfloorcur;
 
     /**
-     *  where 0 = non-secure, 1 = secure. If omitted the secure state is unknown
+     * Indicates the type of browser opened upon clicking the creative in an app, where 0 = embedded, 1 = native.
+     * Note that the Safari View Controller in iOS 9.x devices is considered a native browser for purposes of this attribute
+     *
+     * @var int
+     */
+    protected $clickbrowser;
+
+    /**
+     * Flag to indicate if the impression requires secure HTTPS URL creative assets and markup,
+     * where 0 = non-secure, 1 = secure. If omitted, the secure state is unknown, but non-secure HTTP support can be assumed.
+     *
      * @var int
      */
     protected $secure;
 
     /**
+     * Array of exchange-specific names of supported iframe busters.
+     *
      * Array of strings
      * @var array
      */
     protected $iframebuster;
 
     /**
+     * A Pmp object containing any private marketplace deals in effect for this impression.
+     *
      * @var Pmp
      */
     protected $pmp;
+
+    /**
+     * A Native object; required if this impression is offered as a native ad opportunity.
+     *
+     * @var Native
+     */
+    protected $native;
+
+    /**
+     * Advisory as to the number of seconds that may elapse between the auction and the actual impression.
+     *
+     * @var int
+     */
+    protected $exp;
+
+    /**
+     * An array of Metric object. AdX supplies four metrics for this field: click_through_rate, viewability, completion_rate, and session_depth.
+     * The viewability metric is a fraction from 0.00 to 1.00 in the OpenRTB metric, but it's expressed as a percentage [0-100] in the AdX protocol.
+     * Refer to the AdSlot object table in the Realtime Bidding Guide for descriptions of these metrics. Note session_depth is an integer value.
+     *
+     * @var ArrayCollection
+     */
+    protected $metric;
 
     /**
      * @var Ext
@@ -104,6 +177,7 @@ class Imp implements Arrayable
     public function initialize()
     {
         $this->setPmp(new Pmp());
+        $this->setMetric(new ArrayCollection());
     }
 
     /**
@@ -159,6 +233,24 @@ class Imp implements Arrayable
     public function setVideo(Video $video)
     {
         $this->video = $video;
+        return $this;
+    }
+
+    /**
+     * @return Audio
+     */
+    public function getAudio()
+    {
+        return $this->audio;
+    }
+
+    /**
+     * @param Audio $audio
+     * @return $this
+     */
+    public function setAudio(Audio $audio)
+    {
+        $this->audio = $audio;
         return $this;
     }
 
@@ -384,4 +476,78 @@ class Imp implements Arrayable
         $this->ext = $ext;
         return $this;
     }
+
+
+    /**
+     * @return int
+     */
+    public function getClickbrowser()
+    {
+        return $this->clickbrowser;
+    }
+
+    /**
+     * @param int $clickbrowser
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setClickbrowser($clickbrowser)
+    {
+        $this->validateIn($clickbrowser, BitType::getAll());
+        $this->clickbrowser = (int) $clickbrowser;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExp()
+    {
+        return $this->exp;
+    }
+
+    /**
+     * @param string $exp
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setExp($exp)
+    {
+        $this->validateInt($exp);
+        $this->exp = $exp;
+        return $this;
+    }
+
+    /**
+     * @param ArrayCollection $metric
+     * @return $this
+     */
+    public function setMetric(ArrayCollection $metric)
+    {
+        $this->metric = $metric;
+        return $this;
+    }
+
+    /**
+     * @param Metric $metric
+     * @return $this
+     */
+    public function addMetric(Metric $metric = null)
+    {
+        if (is_null($metric)) {
+            $metric = new Metric();
+        }
+        $this->metric->add($metric);
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getMetric()
+    {
+        return $this->metric;
+    }
+
+
 }

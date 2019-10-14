@@ -1,7 +1,7 @@
 <?php
 /**
  * User.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 01/09/15 - 09:51
@@ -21,25 +21,24 @@ class User implements Arrayable
     use ToArray;
 
     /**
+     * Exchange-specific ID for the user. At least one of id or buyerid is recommended
+     *
      * @recommended
      * @var string
      */
     protected $id;
 
     /**
+     * Buyer-specific ID for the user as mapped by the exchange for the buyer. At least one of buyerid or id is recommended.
+     *
      * @recommended
      * @var string
      */
     protected $buyerid;
 
     /**
-     * Year of birth
-     * @var int
-     */
-    protected $yob;
-
-    /**
-     * where “M” = male, “F” = female, “O” = known to be other (i.e., omitted is unknown)
+     * Gender as "M" male, "F" female, "O" Other. (Null indicates unknown)
+     *
      * @var string
      */
     protected $gender;
@@ -51,17 +50,26 @@ class User implements Arrayable
     protected $keywords;
 
     /**
-     * Proper JSON encoding must be used to include “escaped” quotation marks.
+     * Optional feature to pass bidder data set in the exchange's cookie.
+     * The string must be in base85 cookie safe characters and be in any format.
+     * Proper JSON encoding must be used to include "escaped" quotation marks
+     *
      * @var string
      */
     protected $customdata;
 
     /**
+     * Location of the user's home base defined by a Geo object. This is not necessarily their current location.
+     *
      * @var Geo
      */
     protected $geo;
 
     /**
+     * Additional contextual data. Each Data object represents a different data source.
+     * segment.id references the exchange-detected vertical of the page.
+     * segment.value corresponds to the weight of that detected vertical, a higher weight suggesting the page is more relevant for the detected vertical.
+     *
      * Additional user data - array of Data
      * @var ArrayCollection
      */
@@ -120,25 +128,6 @@ class User implements Arrayable
     {
         $this->validateString($buyerid);
         $this->buyerid = $buyerid;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getYob()
-    {
-        return $this->yob;
-    }
-
-    /**
-     * @param int $yob
-     * @return $this
-     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
-     */
-    public function setYob($yob)
-    {
-        $this->yob = $this->validatePositiveInt($yob);
         return $this;
     }
 

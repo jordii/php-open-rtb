@@ -9,10 +9,10 @@
 
 namespace PowerLinks\OpenRtb\Tests\BidRequest\Specification;
 
+use PHPUnit\Framework\TestCase;
 use PowerLinks\OpenRtb\BidRequest\Specification\ApiFrameworks;
-use PHPUnit_Framework_TestCase;
 
-class ApiFrameworksTest extends PHPUnit_Framework_TestCase
+class ApiFrameworksTest extends TestCase
 {
     public function testGetAll()
     {

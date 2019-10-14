@@ -21,6 +21,8 @@ class Seatbid implements Arrayable
     use ToArray;
 
     /**
+     * Array of 1+ Bid objects each related to an impression. Multiple bids can relate to the same impression.
+     *
      * Array of Bid objects
      * @required
      * @var ArrayCollection
@@ -28,7 +30,9 @@ class Seatbid implements Arrayable
     protected $bid;
 
     /**
-     * ID of the bidder seat on whose behalf this bid is made
+     * ID of the buyer seat (e.g., advertiser, agency) on whose behalf this bid is made.
+     * This ID will be used to breakdown spend and invalid traffic metrics in IVT transparency reporting, given that it is no longer than 64 bytes.
+     *
      * @var string
      */
     protected $seat;

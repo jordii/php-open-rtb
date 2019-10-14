@@ -22,19 +22,25 @@ class NativeAdRequest implements Arrayable
     use ToArray;
 
     /**
+     * Number of the Native Markup version in use.
+     *
      * @default 1
      * @var string
      */
     protected $ver;
 
     /**
-     * Valid values in NativeLayout
+     * The Layout ID of the native ad unit. RECOMMENDED by OpenRTB Native 1.0; optional in 1.1, to be deprecated.
+     *
      * @recommended
      * @var int
      */
     protected $layout;
 
     /**
+     * The Ad unit ID of the native ad unit. This corresponds to one of IAB Core-6 native ad units.
+     * RECOMMENDED by OpenRTB Native 1.0; optional in 1.1, to be deprecated.
+     *
      * @recommended
      * @var int
      */

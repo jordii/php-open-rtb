@@ -1,7 +1,7 @@
 <?php
 /**
  * Device.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 01/09/15 - 10:34
@@ -16,10 +16,27 @@ use PowerLinks\OpenRtb\BidRequest\Specification\DeviceType;
 use PowerLinks\OpenRtb\Tools\Traits\SetterValidation;
 use PowerLinks\OpenRtb\Tools\Traits\ToArray;
 
+/**
+ * This object provides information pertaining to the device through which the user is interacting.
+ * Device information includes its hardware, platform, location, and carrier data.
+ * The device can refer to a mobile handset, a desktop computer, set-top box, or other digital device.
+ *
+ * Class Device
+ * @package PowerLinks\OpenRtb\BidRequest
+ */
 class Device implements Arrayable
 {
     use SetterValidation;
     use ToArray;
+
+    /**
+     * Standard "Do Not Track" flag as set in the header by the browser,
+     * where 0 = tracking is unrestricted, 1 = do not track.
+     *
+     * @recommended
+     * @var int
+     */
+    protected $dnt;
 
     /**
      * Browser user agent
@@ -29,41 +46,64 @@ class Device implements Arrayable
     protected $ua;
 
     /**
-     * @recommended
-     * @var Geo
-     */
-    protected $geo;
-
-    /**
-     * where 0 = tracking is unrestricted, 1 = do not track
-     * @recommended
-     * @var int
-     */
-    protected $dnt;
-
-    /**
-     * where 0 = tracking is unrestricted, 1 = tracking must be limited per commercial guidelines
-     * @recommended
-     * @var int
-     */
-    protected $lmt;
-
-    /**
+     * IPv4 address closest to device.
+     *
      * @recommended
      * @var string
      */
     protected $ip;
 
     /**
+     * Location of the device assumed to be the user's current location defined by a Geo object.
+     *
+     * @recommended
+     * @var Geo
+     */
+    protected $geo;
+
+    /**
+     * Hardware device ID (e.g., IMEI); hashed via SHA1
+     * @var string
+     */
+    protected $didsha1;
+
+    /**
+     * Hardware device ID (e.g., IMEI); hashed via MD5
+     * @var string
+     */
+    protected $didmd5;
+
+    /**
+     * Platform device ID (e.g., Android ID); hashed via SHA1
+     * @var string
+     */
+    protected $dpidsha1;
+
+    /**
+     * Platform device ID (e.g., Android ID); hashed via MD5
+     * @var string
+     */
+    protected $dpidmd5;
+
+    /**
+     * IPv6 address closest to device.
+     *
      * @var string
      */
     protected $ipv6;
 
     /**
-     * PowerLinks\OpenRtb\BidRequest\Specification\DeviceType
-     * @var int
+     * Carrier or ISP (e.g., “VERIZON”). “WIFI” is often used in mobile
+     * to indicate high bandwidth (e.g., video friendly vs. cellular)
+     * @var string
      */
-    protected $devicetype;
+    protected $carrier;
+
+    /**
+     * Browser language using ISO-639-1-alpha-2
+     * @var string
+     */
+    protected $language;
 
     /**
      * Device make (e.g., “Apple”)
@@ -96,16 +136,16 @@ class Device implements Arrayable
     protected $hwv;
 
     /**
-     * Physical height of the screen in pixels
-     * @var int
-     */
-    protected $h;
-
-    /**
      * Physical width of the screen in pixels
      * @var int
      */
     protected $w;
+
+    /**
+     * Physical height of the screen in pixels
+     * @var int
+     */
+    protected $h;
 
     /**
      * Screen size as pixels per linear inch
@@ -126,23 +166,12 @@ class Device implements Arrayable
     protected $js;
 
     /**
-     * Version of Flash supported by the browser
-     * @var string
+     * Indicates if the geolocation API will be available to JavaScript code running in the banner,
+     * where 0 = no, 1 = yes.
+     *
+     * @var int
      */
-    protected $flashver;
-
-    /**
-     * Browser language using ISO-639-1-alpha-2
-     * @var string
-     */
-    protected $language;
-
-    /**
-     * Carrier or ISP (e.g., “VERIZON”). “WIFI” is often used in mobile
-     * to indicate high bandwidth (e.g., video friendly vs. cellular)
-     * @var string
-     */
-    protected $carrier;
+    protected $geofetch;
 
     /**
      * Network connection type
@@ -152,33 +181,25 @@ class Device implements Arrayable
     protected $connectiontype;
 
     /**
+     * The general type of device.
+     *
+     * PowerLinks\OpenRtb\BidRequest\Specification\DeviceType
+     * @var int
+     */
+    protected $devicetype;
+
+    /**
+     * Version of Flash supported by the browser
+     * @var string
+     */
+    protected $flashver;
+
+    /**
+     * ID sanctioned for advertiser use in the clear (i.e., not hashed).
+     *
      * @var string
      */
     protected $ifa;
-
-    /**
-     * Hardware device ID (e.g., IMEI); hashed via SHA1
-     * @var string
-     */
-    protected $didsha1;
-
-    /**
-     * Hardware device ID (e.g., IMEI); hashed via MD5
-     * @var string
-     */
-    protected $didmd5;
-
-    /**
-     * Platform device ID (e.g., Android ID); hashed via SHA1
-     * @var string
-     */
-    protected $dpidsha1;
-
-    /**
-     * Platform device ID (e.g., Android ID); hashed via MD5
-     * @var string
-     */
-    protected $dpidmd5;
 
     /**
      * MAC address of the device; hashed via SHA1
@@ -191,6 +212,24 @@ class Device implements Arrayable
      * @var string
      */
     protected $macmd5;
+
+    /**
+     * "Limit Ad Tracking" signal commercially endorsed (e.g., iOS, Android)
+     * where 0 = tracking is unrestricted, 1 = tracking must be limited per commercial guidelines
+     *
+     * @recommended
+     * @var int
+     */
+    protected $lmt;
+
+    /**
+     * Mobile carrier as the concatenated MCC-MNC code (e.g., "310-005" identifies Verizon Wireless CDMA in the USA).
+     * Refer to https://en.wikipedia.org/wiki/Mobile_country_code for further examples.
+     * Note that the dash between the MCC and MNC parts is required to remove parsing ambiguity.
+     *
+     * @var string
+     */
+    protected $mccmnc;
 
     /**
      * @var Ext
@@ -778,4 +817,48 @@ class Device implements Arrayable
         $this->ext = $ext;
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function getGeofetch()
+    {
+        return $this->geofetch;
+    }
+
+    /**
+     * @param $geofetch
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setGeofetch($geofetch)
+    {
+        $this->validateIn($geofetch, BitType::getAll());
+        $this->geofetch = $geofetch;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMccmnc()
+    {
+        return $this->mccmnc;
+    }
+
+    /**
+     * @param $mccmnc
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setMccmnc($mccmnc)
+    {
+        $this->validateString($mccmnc);
+        $this->mccmnc = $mccmnc;
+
+        return $this;
+    }
+
+
 }

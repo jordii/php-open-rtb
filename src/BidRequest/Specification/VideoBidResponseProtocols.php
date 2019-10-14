@@ -26,4 +26,8 @@ class VideoBidResponseProtocols
     const VAST_1_0_WRAPPER = 4;
     const VAST_2_0_WRAPPER = 5;
     const VAST_3_0_WRAPPER = 6;
+    const VAST_4_0 = 7;
+    const VAST_4_0_WRAPPER = 8;
+    const DAAST_1_0 = 9;
+    const DAAST_1_0_WRAPPER = 10;
 }

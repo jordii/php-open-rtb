@@ -1,7 +1,7 @@
 <?php
 /**
  * Deal.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 01/09/15 - 09:31
@@ -19,42 +19,56 @@ class Deal implements Arrayable
     use ToArray;
 
     /**
+     * A unique identifier for the direct deal.
+     *
      * @required
      * @var string
      */
     protected $id;
 
     /**
-     * Minimum bid for this impression expressed in CPM
+     * Minimum bid for this impression expressed in CPM.
+     *
      * @default 0
      * @var float
      */
     protected $bidfloor;
 
     /**
-     * Currency specified using ISO-4217 alpha codes
+     * Currency specified using ISO-4217 alpha codes.
+     * This may be different from bid currency returned by bidder if this is allowed by the exchange.default = "USD"
+     *
      * @default USD
      * @var string
      */
     protected $bidfloorcur;
 
     /**
-     * where 1 = First Price, 2 = Second Price Plus, 3 = the value passed in bidfloor is the agreed upon deal price
-     * @var int
-     */
-    protected $at;
-
-    /**
+     * Whitelist of buyer seats (e.g., advertisers, agencies) allowed to bid on this deal.
+     * IDs of seats and knowledge of the buyer's customers to which they refer must be coordinated between bidders
+     * and the exchange a priori. Omission implies no seat restrictions.
+     *
      * Array of strings
      * @var array
      */
     protected $wseat;
 
     /**
+     * Array of advertiser domains (e.g., advertiser.com) allowed to bid on this deal. Omission implies no advertiser restrictions
+     *
      * array of advertiser domains (e.g., advertiser.com)
      * @var array
      */
     protected $wadomain;
+
+    /**
+     * Optional override of the overall auction type of the bid request,
+     * where 1 = First Price, 2 = Second Price Plus, 3 = the value passed in bidfloor is the agreed upon deal price.
+     * Additional auction types can be defined by the exchange.
+     *
+     * @var int
+     */
+    protected $at;
 
     /**
      * @var Ext

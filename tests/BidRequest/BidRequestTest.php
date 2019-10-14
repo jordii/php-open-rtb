@@ -9,11 +9,11 @@
 
 namespace PowerLinks\OpenRtb\Tests\BidRequest;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use PowerLinks\OpenRtb\BidRequest\BidRequest;
 use PowerLinks\OpenRtb\BidRequest\Imp;
 
-class BidRequestTest extends PHPUnit_Framework_TestCase
+class BidRequestTest extends TestCase
 {
     public function test()
     {

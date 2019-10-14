@@ -1,7 +1,7 @@
 <?php
 /**
  * Content.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 01/09/15 - 15:39
@@ -9,6 +9,7 @@
 
 namespace PowerLinks\OpenRtb\BidRequest;
 
+use PowerLinks\OpenRtb\BidRequest\Specification\ProductionQuality;
 use PowerLinks\OpenRtb\Tools\Interfaces\Arrayable;
 use PowerLinks\OpenRtb\BidRequest\Specification\BitType;
 use PowerLinks\OpenRtb\BidRequest\Specification\ContentContext;
@@ -21,62 +22,100 @@ class Content implements Arrayable
     use SetterValidation;
     use ToArray;
     /**
+     * ID uniquely identifying the content.
+     *
      * @var string
      */
     protected $id;
 
     /**
+     * Content episode number (typically applies to video content).
+     *
      * Episode number
      * @var int
      */
     protected $episode;
 
     /**
+     * Content title. Video examples: "Search Committee" (television), "A New Hope" (movie),or "Endgame" (made for web).
+     * Non-Video example: "Why an Antarctic Glacier Is Melting So Quickly" (Time magazine article).
+     *
      * @var string
      */
     protected $title;
 
     /**
+     * Content series. Video examples: "The Office" (television), "Star Wars" (movie) or "Arby 'N' The Chief" (made for web).
+     * Non-Video example: "Ecocentric" (Time Magazine blog)
+     *
      * @var string
      */
     protected $series;
 
     /**
      * Content season; typically for video content (e.g., “Season 3”)
+     *
      * @var string
      */
     protected $season;
 
     /**
-     * @var Producer
+     * Artist credited with the content
+     *
+     * @var string
      */
-    protected $producer;
+    protected $artist;
 
     /**
-     * URL of the content
+     * Genre that best describes the content (e.g., rock, pop, etc.).
+     *
+     * @var string
+     */
+    protected $genre;
+
+    /**
+     * Album to which the content belongs; typically for audio.
+     *
+     * @var string
+     */
+    protected $album;
+
+    /**
+     * International Standard Recording Code conforming to ISO-3901
+     *
+     * @var string
+     */
+    protected $isrc;
+
+    /**
+     * URL of the content, for buy-side contextualization or review.
      * @var string
      */
     protected $url;
 
     /**
+     * Array of IAB content categories that describe the content. Refer to enum ContentCategory
+     *
      * Array of Strings
      * @var array
      */
     protected $cat;
 
     /**
-     * @var int
+     * @var ProductionQuality
      */
-    protected $videoquality;
+    protected $prodq;
 
     /**
-     * Type of content (game, video, text, etc.)
-     * PowerLinks\OpenRtb\BidRequest\Specification\ContentContext
-     * @var int
+     * Comma separated list of keywords describing the content.
+     *
+     * @var string
      */
-    protected $context;
+    protected $keywords;
 
     /**
+     * Content rating (e.g., MPAA).
+     *
      * Content rating (e.g., MPAA)
      * @var string
      */
@@ -84,9 +123,53 @@ class Content implements Arrayable
 
     /**
      * User rating of the content (e.g., number of stars, likes, etc.)
+     *
      * @var string
      */
     protected $userrating;
+
+    /**
+     * Type of content (game, video, text, etc.).
+     *
+     * PowerLinks\OpenRtb\BidRequest\Specification\ContentContext
+     * @var int
+     */
+    protected $context;
+
+    /**
+     * OpenRTB <= 2.2 compatibility; use context for 2.3+
+     *
+     * @var string
+     */
+    protected $context_22;
+
+    /**
+     * 0 = not live, 1 = content is live (e.g., stream, live blog).
+     *
+     * @var int
+     */
+    protected $livestream;
+
+    /**
+     * 0 = indirect, 1 = direct
+     *
+     * @var int
+     */
+    protected $sourcerelationship;
+
+    /**
+     * Details about the content Producer.
+     *
+     * @var Producer
+     */
+    protected $producer;
+
+    /**
+     * Length of content in seconds; appropriate for video or audio
+     *
+     * @var int
+     */
+    protected $len;
 
     /**
      * Media rating per QAG guidelines
@@ -96,40 +179,16 @@ class Content implements Arrayable
     protected $qagmediarating;
 
     /**
-     * Comma separated list of keywords describing the content
-     * @var string
-     */
-    protected $keywords;
-
-    /**
-     * 0 = not live, 1 = content is live (e.g., stream, live blog)
+     * Indicator of whether or not the content is embeddable (e.g., an embeddable video player), where 0 = no, 1 = yes
      * @var int
      */
-    protected $livestream;
-
-    /**
-     * 0 = indirect, 1 = direct
-     * @var int
-     */
-    protected $sourcerelationship;
-
-    /**
-     * Length of content in seconds; appropriate for video or audio
-     * @var int
-     */
-    protected $len;
+    protected $embeddable;
 
     /**
      * Content language using ISO-639-1-alpha-2
      * @var string
      */
     protected $language;
-
-    /**
-     * Indicator of whether or not the content is embeddable (e.g., an embeddable video player), where 0 = no, 1 = yes
-     * @var int
-     */
-    protected $embeddable;
 
     /**
      * @var Ext
@@ -155,8 +214,9 @@ class Content implements Arrayable
     }
 
     /**
-     * @param string $id
+     * @param $id
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setId($id)
     {
@@ -174,8 +234,9 @@ class Content implements Arrayable
     }
 
     /**
-     * @param int $episode
+     * @param $episode
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setEpisode($episode)
     {
@@ -192,8 +253,9 @@ class Content implements Arrayable
     }
 
     /**
-     * @param string $title
+     * @param $title
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setTitle($title)
     {
@@ -211,8 +273,9 @@ class Content implements Arrayable
     }
 
     /**
-     * @param string $series
+     * @param $series
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setSeries($series)
     {
@@ -230,8 +293,9 @@ class Content implements Arrayable
     }
 
     /**
-     * @param string $season
+     * @param $season
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setSeason($season)
     {
@@ -267,8 +331,9 @@ class Content implements Arrayable
     }
 
     /**
-     * @param string $url
+     * @param $url
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setUrl($url)
     {
@@ -286,8 +351,9 @@ class Content implements Arrayable
     }
 
     /**
-     * @param string $cat
+     * @param $cat
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function addCat($cat)
     {
@@ -309,32 +375,15 @@ class Content implements Arrayable
     /**
      * @return int
      */
-    public function getVideoquality()
-    {
-        return $this->videoquality;
-    }
-
-    /**
-     * @param int $videoquality
-     * @return $this
-     */
-    public function setVideoquality($videoquality)
-    {
-        $this->videoquality = $this->validateInt($videoquality);
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
     public function getContext()
     {
         return $this->context;
     }
 
     /**
-     * @param int $context
+     * @param $context
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setContext($context)
     {
@@ -352,8 +401,9 @@ class Content implements Arrayable
     }
 
     /**
-     * @param string $contentrating
+     * @param $contentrating
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setContentrating($contentrating)
     {
@@ -371,8 +421,9 @@ class Content implements Arrayable
     }
 
     /**
-     * @param string $userrating
+     * @param $userrating
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setUserrating($userrating)
     {
@@ -410,8 +461,9 @@ class Content implements Arrayable
     }
 
     /**
-     * @param string $keywords
+     * @param $keywords
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setKeywords($keywords)
     {
@@ -429,8 +481,9 @@ class Content implements Arrayable
     }
 
     /**
-     * @param int $livestream
+     * @param $livestream
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setLivestream($livestream)
     {
@@ -448,8 +501,9 @@ class Content implements Arrayable
     }
 
     /**
-     * @param int $sourcerelationship
+     * @param $sourcerelationship
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setSourcerelationship($sourcerelationship)
     {
@@ -469,6 +523,7 @@ class Content implements Arrayable
     /**
      * @param $len
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setLen($len)
     {
@@ -485,8 +540,9 @@ class Content implements Arrayable
     }
 
     /**
-     * @param string $language
+     * @param $language
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setLanguage($language)
     {
@@ -504,8 +560,9 @@ class Content implements Arrayable
     }
 
     /**
-     * @param int $embeddable
+     * @param $embeddable
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setEmbeddable($embeddable)
     {
@@ -531,4 +588,132 @@ class Content implements Arrayable
         $this->ext = $ext;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getArtist()
+    {
+        return $this->artist;
+    }
+
+    /**
+     * @param $artist
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setArtist($artist)
+    {
+        $this->validateString($artist);
+        $this->artist = $artist;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGenre()
+    {
+        return $this->genre;
+    }
+
+    /**
+     * @param $genre
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setGenre($genre)
+    {
+        $this->validateString($genre);
+        $this->genre = $genre;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAlbum()
+    {
+        return $this->album;
+    }
+
+    /**
+     * @param $album
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setAlbum($album)
+    {
+        $this->validateString($album);
+        $this->album = $album;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIsrc()
+    {
+        return $this->isrc;
+    }
+
+    /**
+     * @param $isrc
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setIsrc($isrc)
+    {
+        $this->validateString($isrc);
+        $this->isrc = $isrc;
+
+        return $this;
+    }
+
+    /**
+     * @return ProductionQuality
+     */
+    public function getProdq()
+    {
+        return $this->prodq;
+    }
+
+    /**
+     * @param $prodq
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setProdq($prodq)
+    {
+        $this->validateIn($prodq, ProductionQuality::getAll());
+        $this->prodq = $prodq;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContext22()
+    {
+        return $this->context_22;
+    }
+
+    /**
+     * @param $context_22
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setContext22($context_22)
+    {
+        $this->validateString($context_22);
+        $this->context_22 = $context_22;
+
+        return $this;
+    }
+
+
 }

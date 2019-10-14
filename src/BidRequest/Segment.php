@@ -1,7 +1,7 @@
 <?php
 /**
  * Segment.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 01/09/15 - 09:43
@@ -19,16 +19,22 @@ class Segment implements Arrayable
     use ToArray;
 
     /**
+     * ID of the data segment specific to the data provider.
+     *
      * @var string
      */
     protected $id;
 
     /**
+     * Name of the data segment specific to the data provider.
+     *
      * @var string
      */
     protected $name;
 
     /**
+     * String representation of the data segment value.
+     *
      * @var string
      */
     protected $value;

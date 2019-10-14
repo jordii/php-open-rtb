@@ -9,21 +9,126 @@
 
 namespace PowerLinks\OpenRtb\Tests;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use PowerLinks\OpenRtb\BidRequest\BidRequest;
 use PowerLinks\OpenRtb\BidRequest\Native;
 use PowerLinks\OpenRtb\Hydrator;
 use PowerLinks\OpenRtb\NativeAdRequest\NativeAdRequest;
 
-class HydratorTest extends PHPUnit_Framework_TestCase
+class HydratorTest extends TestCase
 {
     public function testHydrate()
     {
         $array = [
-            'id' => 'aaa',
-            'imp' => [
-                ['id' => 'bbb']
-            ]
+            "user" => [
+                "buyeruid" => "y4O57Y16t5p449R94e7VQKs35fg7T87F",
+                "data" => [
+                    [
+                        "name" => "DoubleClick",
+                        "segment" => [
+                            [
+                                "id" => "936",
+                                "value" => "0.3"
+                            ],
+                            [
+                                "id" => "539",
+                                "value" => "0.2"
+                            ]
+                        ],
+                        "id" => "DetectedVerticals"
+                    ]
+                ],
+                "id" => "R798U54QA3V0l3F9pmWo695f9e7",
+                "customdata" => "24vX66224qs416S8rza8FN137g7db8wc6cD8lRu1x94R46FA"
+            ],
+            "imp" => [
+                [
+                    "tagid" => "2998080533",
+                    "bidfloor" => 0.13,
+                    "id" => "1",
+                    "displaymanager" => "GOOGLE",
+                    "banner" => [
+                        "format" => [
+                            [
+                                "w" => 300,
+                                "h" => 250
+                            ],
+                            [
+                                "w" => 250,
+                                "h" => 250
+                            ]
+                        ],
+                        "expdir" => [
+                            1,
+                            2,
+                            3,
+                            4
+                        ],
+                        "w" => 300,
+                        "h" => 250,
+                        "pos" => 6
+                    ],
+                    "metric" => [
+                        [
+                            "type" => "click_through_rate",
+                            "value" => 0,
+                            "vendor" => "EXCHANGE"
+                        ],
+                        [
+                            "type" => "viewability",
+                            "value" => 0.6,
+                            "vendor" => "EXCHANGE"
+                        ]
+                    ],
+                    "ext" => [
+                        "billing_id" => [
+                            20268073976
+                        ],
+                        "ampad" => 3,
+                        "dfp_ad_unit_code" => "/6280916/google/test"
+                    ],
+                    "secure" => 1,
+                    "bidfloorcur" => "USD"
+                ]
+            ],
+            "device" => [
+                "pxratio" => 1,
+                "ua" => "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36",
+                "devicetype" => 2,
+                "ip" => "192.168.1.0",
+                "geo" => [
+                    "lon" => 121.05069732666016,
+                    "lat" => 0.0,
+                    "country" => "USA",
+                    "region" => "US-NY",
+                    "utcoffset" => 480
+                ],
+                "os" => "Windows"
+            ],
+            "site" => [
+                "publisher" => [
+                    "ext" => [
+                        "country" => "US"
+                    ],
+                    "id" => "pub-6741497946274132"
+                ],
+                "ext" => [
+                    "amp" => 0
+                ],
+                "content" => [
+                    "language" => "en",
+                    "contentrating" => "DV-G"
+                ],
+                "page" => "https://www.google.com"
+            ],
+            "ext" => [
+                "google_query_id" => "ANy-z451HD-99Nii3Jf66a7b9a06z9goBxiID357xnyi4j1Q9Rl8OEv657fppSeU147L66b6"
+            ],
+            "tmax" => 162,
+            "cur" => [
+                "USD"
+            ],
+            "id" => "G9r0Di158163lk5p7718XG"
         ];
 
         $object = new BidRequest();
@@ -31,10 +136,12 @@ class HydratorTest extends PHPUnit_Framework_TestCase
         $result = Hydrator::hydrate($array, $object);
 
         $this->assertSame($object, $result);
-        $this->assertEquals('aaa', $object->getId());
+        $this->assertEquals('G9r0Di158163lk5p7718XG', $object->getId());
+        $this->assertEquals('https://www.google.com', $object->getSite()->getPage());
         $this->assertInstanceOf('PowerLinks\OpenRtb\Tools\Classes\ArrayCollection', $object->getImp());
         $this->assertInstanceOf('PowerLinks\OpenRtb\BidRequest\Imp', $object->getImp()->current());
-        $this->assertEquals('bbb', $object->getImp()->current()->getId());
+        $this->assertEquals('1', $object->getImp()->current()->getId());
+//        $this->assertEquals('y4O57Y16t5p449R94e7VQKs35fg7T87F', $object->getUser()->getBuyerid());
     }
 
     public function testHydrateBidRequest()
@@ -85,14 +192,6 @@ class HydratorTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('1.1', $object->getVer());
         $this->assertEquals('{}', $object->getRequest());
-    }
-
-    /**
-     * @dataProvider jsonProvider
-     */
-    public function testHydrateRecursive($json)
-    {
-        Hydrator::hydrate(json_decode($json, true), new BidRequest());
     }
 
     public function jsonProvider()

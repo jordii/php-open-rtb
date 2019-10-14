@@ -1,7 +1,7 @@
 <?php
 /**
  * App.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 01/09/15 - 15:29
@@ -20,48 +20,47 @@ class App implements Arrayable
     use ToArray;
 
     /**
+     * Application ID on the exchange. RECOMMENDED by the OpenRTB specification.
+     *
      * @recommended
      * @var string
      */
     protected $id;
 
     /**
+     * Application name (may be aliased at publisher's request)
+     *
      * App name (may be aliased at the publisher’s request)
      * @var string
      */
     protected $name;
 
     /**
-     * Application bundle or package name (e.g., com.foo.mygame)
-     * @var string
-     */
-    protected $bundle;
-
-    /**
-     * Domain of the app (e.g., “mygame.foo.com”)
+     * Domain of the application, used for advertiser side blocking. For example, "mygame.foo.com".
+     *
      * @var string
      */
     protected $domain;
 
     /**
-     * App store URL for an installed app
-     * @var string
-     */
-    protected $storeurl;
-
-    /**
+     * Array of IAB content categories of the app. Refer to enum ContentCategory.
+     *
      * Array of string
      * @var array
      */
     protected $cat;
 
     /**
+     * Array of IAB content categories that describe the current section of the app. Refer to enum ContentCategory.
+     *
      * Array of string
      * @var array
      */
     protected $sectioncat;
 
     /**
+     * Array of IAB content categories that describe the current page or view of the app. Refer to enum ContentCategory.
+     *
      * Array of string
      * @var array
      */
@@ -69,39 +68,61 @@ class App implements Arrayable
 
     /**
      * Application version
+     *
      * @var string
      */
     protected $ver;
 
     /**
+     * A platform-specific application identifier intended to be unique to the app and independent of the exchange.
+     * On Android, this should be a bundle or package name (e.g., com.foo.mygame). On iOS, it is a numeric ID.
+     *
+     * @var string
+     */
+    protected $bundle;
+
+    /**
      * Indicates if the app has a privacy policy, where 0 = no, 1 = yes
+     *
      * @var int
      */
     protected $privacypolicy;
 
     /**
-     * 0 = app is free, 1 = the app is a paid versio
+     * 0 = app is free, 1 = the app is a paid version
+     *
      * @var int
      */
     protected $paid;
 
     /**
-     * Details about the Publisher
+     * Details about the Publisher object of the app.
+     *
      * @var Publisher
      */
     protected $publisher;
 
     /**
-     * Details about the Content
+     * Details about the Content within the app.
+     *
      * @var Content
      */
     protected $content;
 
     /**
-     * Comma separated list of keywords about the app
+     * Comma-separated list of keywords about this app.
+     * Note: OpenRTB 2.2 allowed an array of strings as alternate implementation but this was fixed in 2.3+ where it's definitely a single string with CSV content again.
+     * Compatibility with some OpenRTB 2.2 exchanges that adopted the alternate representation may require custom handling of the JSON.
+     *
      * @var string
      */
     protected $keywords;
+
+    /**
+     * App store URL for an installed app
+     * @var string
+     */
+    protected $storeurl;
 
     /**
      * @var Ext

@@ -1,7 +1,7 @@
 <?php
 /**
  * Publisher.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 01/09/15 - 15:38
@@ -19,16 +19,23 @@ class Publisher implements Arrayable
     use ToArray;
 
     /**
+     * Exchange-specific publisher ID as defined by the publisher code suffix of the web property code.
+     * For example, pub-123 is the publisher code of the web property code ca-pub-123.
+     *
      * @var string
      */
     protected $id;
 
     /**
+     * Publisher name (may be aliased at publisher's request)
+     *
      * @var string
      */
     protected $name;
 
     /**
+     * Array of IAB content categories of the app. Refer to enum ContentCategory.
+     *
      * Array of strings
      * @var array
      */
@@ -36,6 +43,7 @@ class Publisher implements Arrayable
 
     /**
      * Highest level domain of the publisher (e.g., “publisher.com”)
+     *
      * @var string
      */
     protected $domain;
@@ -54,8 +62,9 @@ class Publisher implements Arrayable
     }
 
     /**
-     * @param string $id
+     * @param $id
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setId($id)
     {
@@ -73,8 +82,9 @@ class Publisher implements Arrayable
     }
 
     /**
-     * @param string $name
+     * @param $name
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setName($name)
     {
@@ -92,8 +102,9 @@ class Publisher implements Arrayable
     }
 
     /**
-     * @param string $cat
+     * @param $cat
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function addCat($cat)
     {
@@ -121,8 +132,9 @@ class Publisher implements Arrayable
     }
 
     /**
-     * @param string $domain
+     * @param $domain
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setDomain($domain)
     {

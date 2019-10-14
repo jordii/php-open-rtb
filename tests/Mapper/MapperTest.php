@@ -1,7 +1,7 @@
 <?php
 /**
  * MapperTest.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 22/09/15 - 09:30
@@ -9,14 +9,14 @@
 
 namespace PowerLinks\OpenRtb\Tests\Mapper;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use PowerLinks\OpenRtb\BidRequest\BidRequest;
 use PowerLinks\OpenRtb\BidRequest\Imp;
 use PowerLinks\OpenRtb\Hydrator;
 use PowerLinks\OpenRtb\Mapper\MapFactory;
 use PowerLinks\OpenRtb\Mapper\Mapper;
 
-class MapperTest extends PHPUnit_Framework_TestCase
+class MapperTest extends TestCase
 {
     public function testMapFromValues()
     {

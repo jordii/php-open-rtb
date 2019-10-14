@@ -1,7 +1,7 @@
 <?php
 /**
  * Site.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 28/08/15 - 15:07
@@ -20,77 +20,108 @@ class Site implements Arrayable
     use ToArray;
 
     /**
+     * Site ID on the exchange.
+     *
      * @recommended
      * @var string
      */
     protected $id;
 
     /**
+     * Site name (may be masked at publisher's request)
+     *
      * @var string
      */
     protected $name;
 
     /**
+     * Domain of the site, used for advertiser side blocking. For example, "foo.com".
+     *
      * Values allow: i.e. 'mysite.foo.com'
      * @var string
      */
     protected $domain;
 
     /**
+     * Array of IAB content categories of the site. Refer to enum ContentCategory.
+     *
      * Array of strings
      * @var array
      */
     protected $cat;
 
     /**
+     * Array of IAB content categories that describe the current section of the site. Refer to enum ContentCategory.
+     *
      * Array of strings
      * @var array
      */
     protected $sectioncat;
 
     /**
+     * Array of IAB content categories that describe the current page or view of the site. Refer to enum ContentCategory.
+     *
      * Array of strings
      * @var array
      */
     protected $pagecat;
 
     /**
+     * URL of the page where the impression will be shown
+     *
      * @var string
      */
     protected $page;
 
     /**
-     * @var string
-     */
-    protected $ref;
-
-    /**
-     * @var string
-     */
-    protected $search;
-
-    /**
-     * @var int
-     */
-    protected $mobile;
-
-    /**
-     * Values allow: 0 = no, 1 = yes
+     * Indicates if the site has a privacy policy,
+     * where 0 = no, 1 = yes.
+     *
      * @var int
      */
     protected $privacypolicy;
 
     /**
+     * Referrer URL that caused navigation to the current page
+     *
+     * @var string
+     */
+    protected $ref;
+
+    /**
+     * Search string that caused navigation to the current page
+     *
+     * @var string
+     */
+    protected $search;
+
+    /**
+     * Details about the Publisher object of the site.
+     *
      * @var Publisher
      */
     protected $publisher;
 
     /**
+     * Details about the Content within the site.
+     *
      * @var Content
      */
     protected $content;
 
     /**
+     * Indicates if the site has been programmed to optimize layout when viewed on mobile devices, where 0 = no, 1 = yes.
+     *
+     * @var int
+     */
+    protected $mobile;
+
+    /**
+     * Comma-separated list of keywords about this site.
+     * Note: OpenRTB 2.2 allowed an array of strings as alternate implementation but this was fixed in 2.3+
+     * where it's definitely a single string with CSV content again.
+     * Compatibility with some OpenRTB 2.2 exchanges that adopted the alternate representation may require custom handling of the JSON.
+     *
      * @var string
      */
     protected $keywords;

@@ -1,7 +1,7 @@
 <?php
 /**
  * Producer.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 01/09/15 - 16:14
@@ -19,6 +19,8 @@ class Producer implements Arrayable
     use ToArray;
 
     /**
+     * Content producer or originator ID. Useful if content is syndicated, and may be posted on a site using embed tags.
+     *
      * @var string
      */
     protected $id;
@@ -30,6 +32,8 @@ class Producer implements Arrayable
     protected $name;
 
     /**
+     * Array of IAB content categories that describe the content producer.
+     *
      * Array of strings
      * @var array
      */

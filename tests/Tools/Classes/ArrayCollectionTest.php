@@ -1,7 +1,7 @@
 <?php
 /**
  * ArrayCollectionTest.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 01/09/15 - 15:01
@@ -9,17 +9,17 @@
 
 namespace PowerLinks\OpenRtb\Tests\Tools\Classes\Collection;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use PowerLinks\OpenRtb\Tools\Classes\ArrayCollection;
 
-class ArrayCollectionTest extends PHPUnit_Framework_TestCase
+class ArrayCollectionTest extends TestCase
 {
     /**
      * @var ArrayCollection
      */
     private $collection;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->collection = new ArrayCollection();
     }
@@ -141,7 +141,7 @@ class ArrayCollectionTest extends PHPUnit_Framework_TestCase
         $this->collection[] = 'two';
         $this->collection[] = 'three';
         $slice = $this->collection->slice(0, 1);
-        $this->assertInternalType('array', $slice);
+        $this->assertIsArray($slice);
         $this->assertEquals(array('one'), $slice);
         $slice = $this->collection->slice(1);
         $this->assertEquals(array(1 => 'two', 2 => 'three'), $slice);

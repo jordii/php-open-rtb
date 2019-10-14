@@ -1,7 +1,7 @@
 <?php
 /**
  * MapFactoryTest.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 21/09/15 - 11:25
@@ -9,10 +9,10 @@
 
 namespace PowerLinks\OpenRtb\Tests\Mapper;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use PowerLinks\OpenRtb\Mapper\MapFactory;
 
-class MapFactoryTest extends PHPUnit_Framework_TestCase
+class MapFactoryTest extends TestCase
 {
     public function testCreate()
     {

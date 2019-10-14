@@ -1,7 +1,7 @@
 <?php
 /**
  * Native.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 28/08/15 - 17:18
@@ -22,24 +22,32 @@ class Native implements Arrayable
     use ToArray;
 
     /**
+     * Request payload complying with the Native Ad Specification.
+     * Exactly one of {request, request_native} should be used.
      * @required
      * @var string
      */
     protected $request;
 
     /**
+     * Version of the Native Ad Specification to which request complies.
+     *
      * @recommended
      * @var string
      */
     protected $ver;
 
     /**
+     * List of supported API frameworks for this impression. If an API is not explicitly listed, it is assumed not to be supported.
+     *
      * Array of integers (ApiFrameworks)
      * @var array
      */
     protected $api;
 
     /**
+     * Blocked creative attributes.
+     *
      * Array of integers (CreativeAttributes)
      * @var array
      */

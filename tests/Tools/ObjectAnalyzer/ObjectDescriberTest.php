@@ -9,11 +9,10 @@
 
 namespace PowerLinks\OpenRtb\Tests\Tools\ObjectAnalyzer;
 
-use PHPUnit_Framework_TestCase;
-use PowerLinks\OpenRtb\Tools\ObjectAnalyzer\ObjectDescriber;
+use PHPUnit\Framework\TestCase;
 use PowerLinks\OpenRtb\Tools\ObjectAnalyzer\ObjectDescriberFactory;
 
-class ObjectDescriberTest extends PHPUnit_Framework_TestCase
+class ObjectDescriberTest extends TestCase
 {
     public function testConstructor()
     {
@@ -22,7 +21,7 @@ class ObjectDescriberTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('PowerLinks\OpenRtb\BidRequest\BidRequest', $descriptor->getClassName());
         $this->assertEquals('PowerLinks\OpenRtb\BidRequest', $descriptor->getNamespace());
 
-        $this->assertEquals(16, $descriptor->properties->count());
+        $this->assertEquals(20, $descriptor->properties->count());
         $this->assertInstanceOf('Traversable', $descriptor->properties);
 
         foreach ($descriptor->properties as $propertyName => $property) {

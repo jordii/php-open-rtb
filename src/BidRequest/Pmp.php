@@ -1,7 +1,7 @@
 <?php
 /**
  * Pmp.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 01/09/15 - 09:29
@@ -21,12 +21,16 @@ class Pmp implements Arrayable
     use ToArray;
 
     /**
-     * where: 0 = all bids are accepted, 1 = bids are restricted to the deals specified and the terms thereof
+     * Indicator of auction eligibility to seats named in the Direct Deals object,
+     * where 0 = all bids are accepted, 1 = bids are restricted to the deals specified and the terms thereof.
+     *
      * @var int
      */
     protected $private_auction;
 
     /**
+     * Array of Deal objects that convey the specific deals applicable to this impression.
+     *
      * Array of Deal
      * @var ArrayCollection
      */
@@ -68,7 +72,7 @@ class Pmp implements Arrayable
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
     public function getDeals()
     {

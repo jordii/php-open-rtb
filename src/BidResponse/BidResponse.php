@@ -1,7 +1,7 @@
 <?php
 /**
  * BidResponse.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 28/08/15 - 13:34
@@ -21,13 +21,16 @@ class BidResponse implements Arrayable
     use ToArray;
 
     /**
-     * ID of the bid request to which this is a response
+     * ID of the bid request to which this is a response.
+     *
      * @required
      * @var string
      */
     protected $id;
 
     /**
+     * Array of Seatbid objects; 1+ required if a bid is to be made.
+     *
      * Array of Seatbid objects
      * @var ArrayCollection
      */
@@ -35,25 +38,31 @@ class BidResponse implements Arrayable
 
     /**
      * Bidder generated response ID to assist with logging/tracking
+     *
      * @var string
      */
     protected $bidid;
 
     /**
      * Bid currency using ISO-4217 alpha codes
+     *
      * @default USD
      * @var string
      */
     protected $cur;
 
     /**
-     * Proper JSON encoding must be used to include “escaped” quotation marks
+     * Optional feature to allow a bidder to set data in the exchange's cookie.
+     * The string must be in base85 cookie safe characters and be in any format.
+     * Proper JSON encoding must be used to include "escaped" quotation marks.
+     *
      * @var string
      */
     protected $customdata;
 
     /**
      * Reason for not bidding (NoBidReason)
+     *
      * @var int
      */
     protected $nbr;
@@ -74,7 +83,8 @@ class BidResponse implements Arrayable
     }
 
     /**
-     * @return string
+     * @return false|string
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionMissingRequiredField
      */
     public function getBidResponse()
     {

@@ -1,7 +1,7 @@
 <?php
 /**
  * Regs.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 01/09/15 - 09:41
@@ -20,7 +20,9 @@ class Regs implements Arrayable
     use ToArray;
 
     /**
-     * where 0 = no, 1 = yes
+     * Flag indicating if this request is subject to the COPPA regulations established by the USA FTC,
+     * where 0 = no, 1 = yes.
+     *
      * @var int
      */
     protected $coppa;

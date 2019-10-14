@@ -1,7 +1,7 @@
 <?php
 /**
  * BidRequest.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 28/08/15 - 11:39
@@ -21,42 +21,55 @@ class BidRequest implements Arrayable
     use ToArray;
 
     /**
+     * Unique ID of the bid request, provided by the exchange.ç
+     * OpenRTB is websafe base64 (no padding).
      * @required
      * @var string
      */
     protected $id;
 
     /**
+     * Representing the impressions offered.
+     * At least 1 Imp object is required.
      * @required
      * @var ArrayCollection
      */
     protected $imp;
 
     /**
+     * Details about the publisher's website.
+     * Only applicable and recommended for websites.
+     * One off with app.
      * @recommended
      * @var Site
      */
     protected $site;
 
     /**
+     * Details about the publisher's app.
+     * (non-browser applications). Only applicable and recommended for apps.
+     * One off with site.
      * @recommended
      * @var App
      */
     protected $app;
 
     /**
+     * Details about the user's device to which the impression will be delivered.
      * @recommended
      * @var Device
      */
     protected $device;
 
     /**
+     * Details about the human user of the device; the advertising audience.
      * @recommended
      * @var User
      */
     protected $user;
 
     /**
+     * Indicator of test mode in which auctions are not billable,
      * where 0 = live mode, 1 = test mode
      * @default 0
      * @var int
@@ -64,6 +77,7 @@ class BidRequest implements Arrayable
     protected $test;
 
     /**
+     * where 1 = First Price, 2 = Second Price Plus. Exchange-specific auction types can be defined using values > 500. Default = SECOND_PRICE.
      * Auction type, where 1 = First Price, 2 = Second Price Plus
      * @default 2
      * @var int
@@ -77,41 +91,82 @@ class BidRequest implements Arrayable
     protected $tmax;
 
     /**
-     * Array of strings
-     * @var array
+     * Whitelist of buyer seats (e.g., advertisers, agencies) allowed to bid on this impression.
+     * IDs of seats and knowledge of the buyer's customers to which they refer must be coordinated between bidders and the exchange a priori.
+     * Omission implies no seat restrictions.
+     *
+     * @var string
      */
     protected $wseat;
 
     /**
-     * 0 = no or unknown, 1 = yes
+     * Flag to indicate if Exchange can verify that the impressions offered represent all of the impressions available in context
+     * (e.g., all on the web page, all video spots such as pre/mid/post roll) to support road-blocking.
+     * 0 = no or unknown, 1 = yes,
+     * the impressions offered represent all that are available.
      * @default 0
      * @var int
      */
     protected $allimps;
 
     /**
-     * Array of strings (allowed currencies for bids on this bid request using ISO-4217 alpha codes)
+     * Array of allowed currencies for bids on this bid request using ISO-4217 alpha codes.
+     * Recommended only if the exchange accepts multiple currencies.
+     * Array of strings
      * @var array
      */
     protected $cur;
 
     /**
+     * Blocked advertiser categories using the IAB content categories. Refer to enum ContentCategory.
      * Array of strings
      * @var array
      */
     protected $bcat;
 
     /**
+     * Block list of advertisers by their domains (e.g., "ford.com")
      * Array of strings
-     * Block list of advertisers by their domains (e.g., “ford.com”)
      * @var array
      */
     protected $badv;
 
     /**
+     * Block list of applications by their platform-specific exchange-independent application identifiers.
+     * On Android, these should be bundle or package names (e.g., com.foo.mygame). On iOS, these are numeric IDs.
+     * Array of strings
+     * @var array
+     */
+    protected $bapp;
+
+    /**
+     * Specifies any industry, legal, or governmental regulations in force for this request.
      * @var Regs
      */
     protected $regs;
+
+    /**
+     * Block list of buyer seats (e.g., advertisers, agencies) restricted from bidding on this impression.
+     * IDs of seats and knowledge of the buyer's customers to which they refer must be coordinated between bidders and the exchange a priori.
+     * At most, only one of wseat and bseat should be used in the same request. Omission of both implies no seat restrictions.
+     *
+     * @var string
+     */
+    protected $bseat;
+
+    /**
+     * Whitelist of languages for creatives using ISO-639-1-alpha-2. Omission implies no specific restrictions,
+     * but buyers would be advised to consider language attribute in the Device and/or Content objects if available.
+     *
+     * @var string
+     */
+    protected $wlang;
+
+    /**
+     * A Source object that provides data about the inventory source and which entity makes the final decision.
+     * @var Source
+     */
+    protected $source;
 
     /**
      * @var Ext
@@ -131,10 +186,12 @@ class BidRequest implements Arrayable
         $this->setDevice(new Device());
         $this->setUser(new User());
         $this->setRegs(new Regs());
+        $this->setSource(new Source());
     }
 
     /**
-     * @return string
+     * @return false|string
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionMissingRequiredField
      */
     public function getBidRequest()
     {
@@ -142,8 +199,8 @@ class BidRequest implements Arrayable
     }
 
     /**
-     * @deprecated
-     * @return string
+     * @return false|string
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionMissingRequiredField
      */
     public function getRequest()
     {
@@ -172,7 +229,7 @@ class BidRequest implements Arrayable
 
     /**
      * @param ArrayCollection $imp
-     * @return ArrayCollection
+     * @return $this
      */
     public function setImp(ArrayCollection $imp)
     {
@@ -320,8 +377,9 @@ class BidRequest implements Arrayable
     }
 
     /**
-     * @param int $at
+     * @param $at
      * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      */
     public function setAt($at)
     {
@@ -349,7 +407,7 @@ class BidRequest implements Arrayable
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function getWseat()
     {
@@ -364,7 +422,7 @@ class BidRequest implements Arrayable
     public function addWseat($wseat)
     {
         $this->validateString($wseat);
-        $this->wseat[] = $wseat;
+        $this->wseat = $wseat;
         return $this;
     }
 
@@ -489,6 +547,28 @@ class BidRequest implements Arrayable
     }
 
     /**
+     * @param string $bapp
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function addBapp($bapp)
+    {
+        $this->validateString($bapp);
+        $this->bapp[] = $bapp;
+        return $this;
+    }
+
+    /**
+     * @param array $bapp
+     * @return $this
+     */
+    public function setBapp(array $bapp)
+    {
+        $this->bapp = $bapp;
+        return $this;
+    }
+
+    /**
      * @return Ext
      */
     public function getExt()
@@ -503,6 +583,70 @@ class BidRequest implements Arrayable
     public function setExt(Ext $ext)
     {
         $this->ext = $ext;
+        return $this;
+    }
+
+
+    /**
+     * @param string $bseat
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function addBseat($bseat)
+    {
+        $this->validateString($bseat);
+        $this->bseat = $bseat;
+        return $this;
+    }
+
+    /**
+     * @param array $bseat
+     * @return $this
+     */
+    public function setBseat(array $bseat)
+    {
+        $this->bseat = $bseat;
+        return $this;
+    }
+
+    /**
+     * @param string $wlang
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function addWlang($wlang)
+    {
+        $this->validateString($wlang);
+        $this->wlang = $wlang;
+        return $this;
+    }
+
+    /**
+     * @param array $wlang
+     * @return $this
+     */
+    public function setWlang(array $wlang)
+    {
+        $this->wlang = $wlang;
+        return $this;
+    }
+
+
+    /**
+     * @return Source
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    /**
+     * @param Source $source
+     * @return $this
+     */
+    public function setSource(Source $source)
+    {
+        $this->source = $source;
         return $this;
     }
 }

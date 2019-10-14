@@ -1,7 +1,7 @@
 <?php
 /**
  * Banner.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 28/08/15 - 14:39
@@ -9,6 +9,12 @@
 
 namespace PowerLinks\OpenRtb\BidRequest;
 
+use PowerLinks\OpenRtb\BidRequest\Specification\AdPosition;
+use PowerLinks\OpenRtb\BidRequest\Specification\ApiFrameworks;
+use PowerLinks\OpenRtb\BidRequest\Specification\BannerAdTypes;
+use PowerLinks\OpenRtb\BidRequest\Specification\CreativeAttributes;
+use PowerLinks\OpenRtb\BidRequest\Specification\ExpandableDirection;
+use PowerLinks\OpenRtb\Tools\Classes\ArrayCollection;
 use PowerLinks\OpenRtb\Tools\Interfaces\Arrayable;
 use PowerLinks\OpenRtb\BidRequest\Specification\BannerMimeType;
 use PowerLinks\OpenRtb\Tools\Traits\SetterValidation;
@@ -20,88 +26,163 @@ class Banner implements Arrayable
     use ToArray;
 
     /**
+     * Width in device independent pixels (DIPS). If no Format objects are specified, this is an exact width requirement. Otherwise it is a preferred width.
+     *
      * @recommended
      * @var int
      */
     protected $w;
 
     /**
+     * Height in device independent pixels (DIPS). If no Format objects are specified, this is an exact height requirement. Otherwise it is a preferred height.
+     *
      * @recommended
      * @var int
      */
     protected $h;
 
     /**
-     * @var int
+     * Array of Format objects representing the banner sizes permitted. If none are specified, then use of the h and w attributes is highly recommended.
+     *
+     * @var ArrayCollection
      */
-    protected $wmax;
+    protected $format;
 
     /**
-     * @var int
-     */
-    protected $hmax;
-
-    /**
-     * @var int
-     */
-    protected $wmin;
-
-    /**
-     * @var int
-     */
-    protected $hmin;
-
-    /**
+     * Unique identifier for this Banner object.
+     * Recommended when Banner objects are used with a Video object to represent an array of companion ads.
+     * Values usually start at 1 and increase with each object; should be unique within an impression.
+     *
      * @var string
      */
     protected $id;
 
     /**
+     * This OpenRTB table has values derived from the IAB Quality Assurance Guidelines (QAG).
+     * Practitioners should keep in sync with updates to the QAG values as published on IAB.net. Values "4" - "7" apply to apps per the mobile addendum to QAG version 1.5.
+     * Note that Banner.pos only supports one value. If is_sticky, Banner.pos is populated with stickiness.
+     * If unknown_stickiness, slot_visibility is used. Stickiness indicates the banner is always onscreen,
+     * whereas visibility above-the-fold or below-the-fold can change as the user scrolls.
+     *
+     * @var int
+     */
+    protected $pos;
+
+    /**
+     * Blocked banner ad types
+     * Examples:
+     *  XHTML_TEXT_AD = 1; // "Usually mobile".
+     *  XHTML_BANNER_AD = 2; // "Usually mobile".
+     *  JAVASCRIPT_AD = 3; // JavaScript must be valid xhtml
+     *  IFRAME = 4; // Iframe.
+     *
      * Array of Integers
      * @var array
      */
     protected $btype;
 
     /**
+     * Blocked creative attributes.
+     * Examples:
+     *  AUDIO_AUTO_PLAY = 1;
+     *  AUDIO_USER_INITIATED = 2;
+     *
      * Array of Integers
      * @var array
      */
     protected $battr;
 
     /**
-     * @var int
-     */
-    protected $pos;
-
-    /**
+     * Whitelist of content MIME types supported.
+     * Popular MIME types include, but are not limited to "image/jpg", "image/gif" and"application/x-shockwave-flash".
+     *
      * Array of Strings
-     * Values allow: 'application/x-shockwave-flash', 'image/jpg', 'image/gif'
      * @var array
      */
     protected $mimes;
 
     /**
+     * Specify if the banner is delivered in the top frame (true) or in an iframe (false).
+     *
      * Values allow: 0 = no, 1 = yes
      * @var int
      */
     protected $topframe;
 
     /**
+     * Directions in which the banner may expand.
+     *
      * Array of integers
      * @var array
      */
     protected $expdir;
 
     /**
+     * List of supported API frameworks for this impression. If an API is not explicitly listed, it is assumed not to be supported.
+     *
      * Array of integers
      * @var array
      */
     protected $api;
 
     /**
+     * Relevant only for Banner objects used with a Video object in an array of companion ads.
+     * Indicates the companion banner rendering mode relative to the associated video, where 0 = concurrent, 1 = end-card.
+     * We currently only support end-cards on mApp video interstitials.
+     *
+     * @var int
+     */
+    protected $vcm;
+
+    /**
+     * Maximum width of the impression in pixels.
+     * @deprecated
+     *
+     * @var int
+     */
+    protected $wmax;
+
+    /**
+     * Maximum height of the impression in pixels.
+     * @deprecated
+     *
+     * @var int
+     */
+    protected $hmax;
+
+    /**
+     * Minimum width of the impression in pixels.
+     * @deprecated
+     *
+     * @var int
+     */
+    protected $wmin;
+
+    /**
+     * Minimum height of the impression in pixels.
+     * @deprecated
+     *
+     * @var int
+     */
+    protected $hmin;
+
+
+
+    /**
      * @var Ext
      */
     protected $ext;
+
+
+    public function __construct()
+    {
+        $this->initialize();
+    }
+
+    public function initialize()
+    {
+        $this->setFormat(new ArrayCollection());
+    }
 
     /**
      * @return int
@@ -252,7 +333,8 @@ class Banner implements Arrayable
      */
     public function addBtype($btype)
     {
-        $this->btype[] = $this->validateInt($btype);
+        $this->validateIn($btype, BannerAdTypes::getAll());
+        $this->btype[] = $btype;
         return $this;
     }
 
@@ -281,7 +363,8 @@ class Banner implements Arrayable
      */
     public function addBattr($battr)
     {
-        $this->battr[] = $this->validateInt($battr);
+        $this->validateIn($battr, CreativeAttributes::getAll());
+        $this->battr[] = $battr;
         return $this;
     }
 
@@ -310,7 +393,7 @@ class Banner implements Arrayable
      */
     public function setPos($pos)
     {
-        $this->pos = $this->validateInt($pos);
+        $this->pos = $this->validateIn($pos, AdPosition::getAll());
         return $this;
     }
 
@@ -378,7 +461,8 @@ class Banner implements Arrayable
      */
     public function addExpdir($expdir)
     {
-        $this->expdir[] = $this->validateInt($expdir);
+        $this->validateIn($expdir, ExpandableDirection::getAll());
+        $this->expdir[] = $expdir;
         return $this;
     }
 
@@ -407,7 +491,8 @@ class Banner implements Arrayable
      */
     public function addApi($api)
     {
-        $this->api[] = $this->validateInt($api);
+        $this->validateIn($api, ApiFrameworks::getAll());
+        $this->api[] = $api;
         return $this;
     }
 
@@ -438,4 +523,60 @@ class Banner implements Arrayable
         $this->ext = $ext;
         return $this;
     }
+
+
+    /**
+     * @param ArrayCollection $format
+     * @return $this
+     */
+    public function setFormat(ArrayCollection $format)
+    {
+        $this->format = $format;
+        return $this;
+    }
+
+    /**
+     * @param Format $format
+     * @return $this
+     */
+    public function addFormat(Format $format = null)
+    {
+        if (is_null($format)) {
+            $format = new Format();
+        }
+        $this->format->add($format);
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getFormat()
+    {
+        return $this->format;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVcm()
+    {
+        return $this->vcm;
+    }
+
+    /**
+     * @param $vcm
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setVcm($vcm)
+    {
+        $this->validateInt($vcm);
+        $this->vcm = $vcm;
+
+        return $this;
+    }
+
+
+
 }

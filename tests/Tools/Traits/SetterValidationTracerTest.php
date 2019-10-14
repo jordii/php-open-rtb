@@ -9,10 +9,10 @@
 
 namespace PowerLinks\OpenRtb\Tests\Tools\Traits;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use PowerLinks\OpenRtb\BidRequest\BidRequest;
 
-class SetterValidationTracerTest extends PHPUnit_Framework_TestCase
+class SetterValidationTracerTest extends TestCase
 {
     public function testTracer()
     {
@@ -20,8 +20,8 @@ class SetterValidationTracerTest extends PHPUnit_Framework_TestCase
             $bidRequest = new BidRequest();
             $bidRequest->addCur(1);
         } catch (\Exception $e) {
-            $this->assertContains(
-                'PowerLinks\OpenRtb\BidRequest\BidRequest::addCur::416[validateString]',
+            $this->assertStringContainsString(
+                'PowerLinks\OpenRtb\BidRequest\BidRequest::addCur::474[validateString]',
                 $e->getMessage()
             );
         }

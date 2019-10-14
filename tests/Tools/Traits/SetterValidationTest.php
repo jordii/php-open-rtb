@@ -1,7 +1,7 @@
 <?php
 /**
  * SetterValidationTest.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 15/09/15 - 15:39
@@ -9,14 +9,14 @@
 
 namespace PowerLinks\OpenRtb\Tests\Tools\Traits;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use PowerLinks\OpenRtb\Tests\AccessProtectedMethod;
 
-class SetterValidationTest extends PHPUnit_Framework_TestCase
+class SetterValidationTest extends TestCase
 {
     private $setterValidation;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setterValidation =  $this->getMockForTrait('PowerLinks\OpenRtb\Tools\Traits\SetterValidation');
     }
@@ -27,11 +27,11 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      * @dataProvider validateStringExceptionProvider
      */
     public function testValidateStringException($value)
     {
+        $this->expectException(\PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue::class);
         AccessProtectedMethod::invokeMethod($this->setterValidation, 'validateString', [$value]);
     }
 
@@ -40,8 +40,7 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
         return [
             [1],
             [1.234],
-            [new \stdClass],
-            [null]
+            [new \stdClass]
         ];
     }
 
@@ -53,11 +52,11 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      * @dataProvider validateIntExceptionProvider
      */
     public function testValidateIntException($value)
     {
+        $this->expectException(\PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue::class);
         AccessProtectedMethod::invokeMethod($this->setterValidation, 'validateInt', [$value, 1]);
     }
 
@@ -66,8 +65,7 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
         return [
             ['test'],
             [1.234],
-            [new \stdClass],
-            [null]
+            [new \stdClass]
         ];
     }
 
@@ -78,11 +76,11 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      * @dataProvider validatePositiveIntExceptionProvider
      */
     public function testValidatePositiveIntException($value)
     {
+        $this->expectException(\PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue::class);
         AccessProtectedMethod::invokeMethod($this->setterValidation, 'validatePositiveInt', [$value, 1]);
     }
 
@@ -92,8 +90,7 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
             ['test'],
             [1.234],
             [-1],
-            [new \stdClass],
-            [null]
+            [new \stdClass]
         ];
     }
 
@@ -118,11 +115,11 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      * @dataProvider validatePositiveFloatExceptionProvider
      */
     public function testValidatePositiveFloatException($value)
     {
+        $this->expectException(\PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue::class);
         AccessProtectedMethod::invokeMethod($this->setterValidation, 'validatePositiveFloat', [$value, 1]);
     }
 
@@ -132,8 +129,7 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
             ['test'],
             [-1],
             [-1.2],
-            [new \stdClass],
-            [null]
+            [new \stdClass]
         ];
     }
 
@@ -148,11 +144,11 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      * @dataProvider validateInExceptionProvider
      */
     public function testValidateInException($value, $validValues)
     {
+        $this->expectException(\PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue::class);
         AccessProtectedMethod::invokeMethod($this->setterValidation, 'validateIn', [$value, $validValues, 1]);
     }
 
@@ -160,8 +156,7 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
     {
         return [
             ['test', ['alpha', 'bravo']],
-            [1, [2, 3]],
-            [null, [1, 2, 3]]
+            [1, [2, 3]]
         ];
     }
 
@@ -184,11 +179,11 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      * @dataProvider validateInWithCustom500ValuesExceptionProvider
      */
     public function testValidateInWithCustom500ValuesException($value, $validValues)
     {
+        $this->expectException(\PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue::class);
         AccessProtectedMethod::invokeMethod(
             $this->setterValidation,
             'validateInWithCustom500Values',
@@ -210,11 +205,11 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      * @dataProvider validateMd5ExceptionProvider
      */
     public function testValidateMd5Exception($value)
     {
+        $this->expectException(\PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue::class);
         AccessProtectedMethod::invokeMethod($this->setterValidation, 'validateMd5', [$value, 1]);
     }
 
@@ -226,8 +221,7 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
             ['4ca4238a0b923820dcc509a6f75849b'],
             [1],
             [1.234],
-            [new \stdClass],
-            [null]
+            [new \stdClass]
         ];
     }
 
@@ -237,11 +231,11 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      * @dataProvider validateSha1ExceptionProvider
      */
     public function testValidateSha1Exception($value)
     {
+        $this->expectException(\PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue::class);
         AccessProtectedMethod::invokeMethod($this->setterValidation, 'validateSha1', [$value, 1]);
     }
 
@@ -253,8 +247,7 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
             ['4ca4238a0b923820dcc509a6f75849b509a6f75'],
             [1],
             [1.234],
-            [new \stdClass],
-            [null]
+            [new \stdClass]
         ];
     }
 
@@ -280,11 +273,11 @@ class SetterValidationTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
      * @dataProvider validateIpExceptionProvider
      */
     public function testValidateIpException($ip)
     {
+        $this->expectException(\PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue::class);
         $this->assertTrue(AccessProtectedMethod::invokeMethod($this->setterValidation, 'validateIp', [$ip]));
     }
 

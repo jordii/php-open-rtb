@@ -1,7 +1,7 @@
 <?php
 /**
  * GetConstantsTest.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 15/09/15 - 16:58
@@ -9,7 +9,7 @@
 
 namespace PowerLinks\OpenRtb\Tests\Tools\Traits;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use PowerLinks\OpenRtb\Tools\Traits\GetConstants;
 
 class TraitImplementation
@@ -20,7 +20,7 @@ class TraitImplementation
     const STRING_TEST = 'test';
 }
 
-class GetConstantsTest extends PHPUnit_Framework_TestCase
+class GetConstantsTest extends TestCase
 {
     public function testGetAll()
     {

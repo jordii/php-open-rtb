@@ -1,7 +1,7 @@
 <?php
 /**
  * Geo.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 01/09/15 - 09:57
@@ -9,6 +9,7 @@
 
 namespace PowerLinks\OpenRtb\BidRequest;
 
+use PowerLinks\OpenRtb\BidRequest\Specification\LocationService;
 use PowerLinks\OpenRtb\Tools\Interfaces\Arrayable;
 use PowerLinks\OpenRtb\BidRequest\Specification\LocationType;
 use PowerLinks\OpenRtb\Tools\Traits\SetterValidation;
@@ -32,12 +33,6 @@ class Geo implements Arrayable
     protected $lon;
 
     /**
-     * PowerLinks\OpenRtb\BidRequest\Specification\LocationType
-     * @var int
-     */
-    protected $type;
-
-    /**
      * Country code using ISO-3166-1-alpha-3
      * @var string
      */
@@ -56,22 +51,60 @@ class Geo implements Arrayable
     protected $regionfips104;
 
     /**
-     * Google metro code
+     * Google metro code; similar to but not exactly Nielsen DMAs.
+     * Refer to the Geographical Targeting page for a link to the codes.
+     *
      * @var string
      */
     protected $metro;
 
     /**
      * City using United Nations Code for Trade & Transport Locations
+     * in the format "city": "San Antonio"
+     *
      * @var string
      */
     protected $city;
 
     /**
      * Zip or postal code
+     *
      * @var string
      */
     protected $zip;
+
+    /**
+     * Source of location data; recommended when passing lat/lon
+     *
+     * PowerLinks\OpenRtb\BidRequest\Specification\LocationType
+     * @var int
+     */
+    protected $type;
+
+    /**
+     * Estimated location accuracy in meters; recommended when lat/lon are specified and derived from a device's location services (i.e., type = 1).
+     * Note that this is the accuracy as reported from the device.
+     * Consult OS specific documentation (e.g., Android, iOS) for exact interpretation.
+     *
+     * @var int
+     */
+    protected $accuracy;
+
+    /**
+     * Number of seconds since this geolocation fix was established.
+     * Note that devices may cache location data across multiple fetches.
+     * Ideally, this value should be from the time the actual fix was taken.
+     *
+     * @var int
+     */
+    protected $lastfix;
+
+    /**
+     * Service or provider used to determine geolocation from IP address if applicable (i.e., type = 2).
+     *
+     * @var LocationService
+     */
+    protected $ipservice;
 
     /**
      * Local time as the number +/- of minutes from UTC
@@ -298,4 +331,69 @@ class Geo implements Arrayable
         $this->ext = $ext;
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function getAccuracy()
+    {
+        return $this->accuracy;
+    }
+
+    /**
+     * @param $accuracy
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setAccuracy($accuracy)
+    {
+        $this->validateInt($accuracy);
+        $this->accuracy = $accuracy;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastfix()
+    {
+        return $this->lastfix;
+    }
+
+    /**
+     * @param $lastfix
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setLastfix($lastfix)
+    {
+        $this->validateInt($lastfix);
+        $this->lastfix = $lastfix;
+
+        return $this;
+    }
+
+    /**
+     * @return LocationService
+     */
+    public function getIpservice()
+    {
+        return $this->ipservice;
+    }
+
+    /**
+     * @param $ipservice
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setIpservice($ipservice)
+    {
+        $this->validateIn($ipservice, LocationService::getAll());
+        $this->ipservice = $ipservice;
+
+        return $this;
+    }
+
+
 }

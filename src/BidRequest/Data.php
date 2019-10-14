@@ -1,7 +1,7 @@
 <?php
 /**
  * Data.php
- * 
+ *
  * @copyright PowerLinks
  * @author Manuel Kanah <manuel@powerlinks.com>
  * Date: 01/09/15 - 09:48
@@ -20,16 +20,22 @@ class Data implements Arrayable
     use ToArray;
 
     /**
+     * Exchange-specific ID for the data provider.
+     *
      * @var string
      */
     protected $id;
 
     /**
+     * Exchange-specific name for the data provider.
+     *
      * @var string
      */
     protected $name;
 
     /**
+     * Array of Segment objects that contain the actual data values.
+     *
      * Array of Segment
      * @var ArrayCollection
      */
